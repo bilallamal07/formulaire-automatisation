@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code - Pitch Slides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .qr-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #6B7280;
+            margin-bottom: 30px;
+        }
+
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 3px solid #E5E7EB;
+            display: inline-block;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .qr-code img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .url {
+            background: #F3F4F6;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: clamp(12px, 2.5vw, 14px);
+            color: #2563EB;
+            font-weight: 600;
+            word-break: break-all;
+            margin-bottom: 25px;
+        }
+
+        .instructions {
+            background: #EFF6FF;
+            border-left: 4px solid #2563EB;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-top: 25px;
+        }
+
+        .instructions h3 {
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: 700;
+            color: #1E40AF;
+            margin-bottom: 12px;
+        }
+
+        .instructions p {
+            font-size: clamp(13px, 2.8vw, 14px);
+            color: #1F2937;
+            line-height: 1.6;
+        }
+
+        .cta {
+            margin-top: 25px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: clamp(14px, 3vw, 16px);
+            display: inline-block;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .cta:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            body {
+                padding: 15px;
+            }
+
+            .qr-container {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+
+            .qr-code {
+                padding: 15px;
+            }
+
+            .instructions {
+                padding: 16px;
+            }
+
+            .cta {
+                padding: 14px 28px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 380px) {
+            .qr-container {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Apply animations */
+        .qr-container {
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        h1 {
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        .subtitle {
+            animation: fadeIn 0.8s ease-out 0.4s both;
+        }
+
+        .qr-code {
+            animation: scaleIn 0.8s ease-out 0.6s both;
+            transition: transform 0.3s ease;
+        }
+
+        .qr-code:hover {
+            transform: scale(1.05);
+        }
+
+        .url {
+            animation: fadeIn 0.8s ease-out 0.8s both;
+        }
+
+        .instructions {
+            animation: slideUp 0.8s ease-out 1s both;
+        }
+
+        .cta {
+            animation: fadeIn 0.8s ease-out 1.2s both, pulse 2s ease-in-out 1.5s infinite;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 40px;
+            }
+
+            .qr-container {
+                box-shadow: none;
+                padding: 60px;
+                animation: none;
+            }
+
+            .cta {
+                display: none;
+            }
+
+            h1, .subtitle, .qr-code, .url, .instructions {
+                animation: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <h1>📱 Scannez pour voir les slides</h1>
+        <p class="subtitle">Automatisez votre business</p>
+
+        <div class="qr-code">
+            <img src="qr-code-pitch-blue.png" alt="QR Code - Pitch Slides">
+        </div>
+
+        <div class="url">
+            https://bilallamal07.github.io/form/pitch.html
+        </div>
+
+        <div class="instructions">
+            <h3>📲 Comment utiliser ce QR code :</h3>
+            <p>
+                1. Ouvrez l'appareil photo de votre smartphone<br>
+                2. Pointez-le vers le QR code<br>
+                3. Appuyez sur la notification pour ouvrir le lien<br>
+                4. Découvrez comment automatiser votre business !
+            </p>
+        </div>
+
+        <a href="https://bilallamal07.github.io/form/pitch.html" class="cta" target="_blank">
+            Voir les slides maintenant →
+        </a>
+    </div>
+</body>
+</html>
