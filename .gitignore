@@ -1,0 +1,43 @@
+# Local development files - DO NOT COMMIT
+*.pdf
+*.pptx
+*.txt
+
+# Development/backup HTML files
+pitch-slides-final.html
+pitch-slides-summary.html
+additional-slides.html
+complete-landing-page.html
+formulaire-en-ligne.html
+landing-page.html
+poster-automatisation.html
+slide-4-comment-ca-marche.html
+
+# Internal documentation
+CLAUDE.md
+README.md
+SETUP-SUMMARY.md
+SLIDES-UPDATED.md
+QUICK-CHANGES-CHECKLIST.md
+test-report.md
+
+# Google Apps Script (contains sensitive config)
+google-apps-script-CONFIGURED.js
+
+# Pre-production / draft files
+Pre-Prod/
+
+# Playwright MCP config
+.playwright-mcp/
+
+# Lead form skill file
+lead form
+
+# Screenshots from testing
+*.png
+!qr-code-pitch.png
+!qr-code-pitch-blue.png
+
+# System files
+.DS_Store
+Thumbs.db
