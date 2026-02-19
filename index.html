@@ -895,9 +895,164 @@
                 margin: 0 auto;
             }
         }
+
+        /* ============================================
+           ANIMATED GRADIENT BACKGROUND (full page)
+           ============================================ */
+
+        body {
+            --gradient-background-start: rgb(108, 0, 162);
+            --gradient-background-end:   rgb(0, 17, 82);
+            --first-color:   18, 113, 255;
+            --second-color:  221, 74, 255;
+            --third-color:   100, 220, 255;
+            --fourth-color:  200, 50, 50;
+            --fifth-color:   180, 180, 50;
+            --pointer-color: 140, 100, 255;
+            --bg-size:       80%;
+            --blend:         hard-light;
+        }
+
+        #bg-gradient-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            background: linear-gradient(40deg,
+                var(--gradient-background-start),
+                var(--gradient-background-end));
+            overflow: hidden;
+        }
+
+        .bg-gradient-svg { display: none; }
+
+        #gradients-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .g-blob {
+            position: absolute;
+            width:  var(--bg-size);
+            height: var(--bg-size);
+            top:  calc(50% - var(--bg-size) / 2);
+            left: calc(50% - var(--bg-size) / 2);
+            mix-blend-mode: var(--blend);
+        }
+
+        .g-first {
+            background: radial-gradient(circle at center,
+                rgb(var(--first-color)) 0,
+                rgb(var(--first-color)) 50%) no-repeat;
+            transform-origin: center center;
+            animation: moveVertical 30s ease infinite;
+            opacity: 1;
+        }
+
+        .g-second {
+            background: radial-gradient(circle at center,
+                rgba(var(--second-color), 0.8) 0,
+                rgba(var(--second-color), 0) 50%) no-repeat;
+            transform-origin: calc(50% - 400px);
+            animation: moveInCircle 20s reverse infinite;
+            opacity: 1;
+        }
+
+        .g-third {
+            background: radial-gradient(circle at center,
+                rgba(var(--third-color), 0.8) 0,
+                rgba(var(--third-color), 0) 50%) no-repeat;
+            transform-origin: calc(50% + 400px);
+            animation: moveInCircle 40s linear infinite;
+            opacity: 1;
+        }
+
+        .g-fourth {
+            background: radial-gradient(circle at center,
+                rgba(var(--fourth-color), 0.8) 0,
+                rgba(var(--fourth-color), 0) 50%) no-repeat;
+            transform-origin: calc(50% - 200px);
+            animation: moveHorizontal 40s ease infinite;
+            opacity: 0.7;
+        }
+
+        .g-fifth {
+            background: radial-gradient(circle at center,
+                rgba(var(--fifth-color), 0.8) 0,
+                rgba(var(--fifth-color), 0) 50%) no-repeat;
+            transform-origin: calc(50% - 800px) calc(50% + 800px);
+            animation: moveInCircle 20s ease infinite;
+            opacity: 1;
+        }
+
+        #g-interactive {
+            position: absolute;
+            background: radial-gradient(circle at center,
+                rgba(var(--pointer-color), 0.8) 0,
+                rgba(var(--pointer-color), 0) 50%) no-repeat;
+            mix-blend-mode: var(--blend);
+            width: 100%;
+            height: 100%;
+            top: -50%;
+            left: -50%;
+            opacity: 0.7;
+        }
+
+        @keyframes moveVertical {
+            0%   { transform: translateY(-50%); }
+            50%  { transform: translateY(50%); }
+            100% { transform: translateY(-50%); }
+        }
+
+        @keyframes moveInCircle {
+            0%   { transform: rotate(0deg); }
+            50%  { transform: rotate(180deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes moveHorizontal {
+            0%   { transform: translateX(-50%) translateY(-10%); }
+            50%  { transform: translateX(50%) translateY(10%); }
+            100% { transform: translateX(-50%) translateY(-10%); }
+        }
+
+        /* All content above the fixed background */
+        #main-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Slides transparent — gradient shows through */
+        .slide {
+            background: transparent;
+        }
     </style>
 </head>
 <body>
+    <!-- Animated Gradient Background (fixed, full page) -->
+    <div id="bg-gradient-container" aria-hidden="true">
+        <svg class="bg-gradient-svg">
+            <defs>
+                <filter id="blurMe">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+                    <feColorMatrix in="blur" mode="matrix"
+                        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+                        result="goo"/>
+                    <feBlend in="SourceGraphic" in2="goo"/>
+                </filter>
+            </defs>
+        </svg>
+        <div id="gradients-container">
+            <div class="g-blob g-first"></div>
+            <div class="g-blob g-second"></div>
+            <div class="g-blob g-third"></div>
+            <div class="g-blob g-fourth"></div>
+            <div class="g-blob g-fifth"></div>
+            <div id="g-interactive"></div>
+        </div>
+    </div>
     <!-- Skip to main content link for keyboard users -->
     <a href="#main-content" class="skip-link">Passer au contenu principal</a>
 
@@ -1105,5 +1260,34 @@
     </section>
     </main>
 
+    <script>
+    (function () {
+        // Safari can't combine SVG filter + CSS blur — use plain blur instead
+        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        var gc = document.getElementById('gradients-container');
+        if (gc) {
+            gc.style.filter = isSafari ? 'blur(40px)' : 'url(#blurMe) blur(40px)';
+        }
+
+        // Smooth mouse-following interactive blob (lerp smoothing, same as original)
+        var el = document.getElementById('g-interactive');
+        if (!el) return;
+
+        var curX = 0, curY = 0, tgX = 0, tgY = 0;
+
+        document.addEventListener('mousemove', function (e) {
+            tgX = e.clientX;
+            tgY = e.clientY;
+        });
+
+        function move() {
+            curX += (tgX - curX) / 20;
+            curY += (tgY - curY) / 20;
+            el.style.transform = 'translate(' + Math.round(curX) + 'px, ' + Math.round(curY) + 'px)';
+            requestAnimationFrame(move);
+        }
+        move();
+    })();
+    </script>
 </body>
 </html>
